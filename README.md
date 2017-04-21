@@ -99,3 +99,24 @@ alternatively, deploy the `HashRegistrar`:
 
 Check the truffle [documentation](http://truffleframework.com/docs/) for more information.
 
+# Dev in ConsenLabs
+
+## deploy
+
+	truffle migrate --reset  --network kovan
+
+## test in console
+```
+truffle console --reset  --network kovan
+
+r = Registrar.at(<Registrar Contract Address>)
+
+r.state(web3.sha3('caizhen'))
+
+r.startAuction(web3.sha3('caizhen'))
+
+r.shaBid(web3.sha3('caizhen'), web3.eth.accounts[0], web3.toWei(0.3), web3.sha3('secret'), function(err, result) {console.log(err, result)})
+
+r.newBid(<bid above>, {from: web3.eth.accounts[0], value: web3.toWei(2), gas: 1000000}, function(err, txid) {console.log(err, txid)})
+
+```
