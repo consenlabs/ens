@@ -105,9 +105,9 @@ contract Registrar {
 
     enum Mode { Open, Auction, Owned, Forbidden, Reveal, NotYetAvailable }
 
-    uint32 constant totalAuctionLength = 5 days;
-    uint32 constant revealPeriod = 48 hours;
-    uint32 constant launchLength = 13 weeks;
+    uint32 constant totalAuctionLength = 4 minutes;
+    uint32 constant revealPeriod = 2 minutes;
+    uint32 constant launchLength = 2 minutes;
     uint constant minPrice = 0.01 ether;
     uint public registryStarted;
 
