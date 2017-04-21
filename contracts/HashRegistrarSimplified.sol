@@ -102,7 +102,7 @@ contract Registrar {
 
     mapping (bytes32 => entry) _entries;
     mapping (address => mapping(bytes32 => Deed)) public sealedBids;
-    
+
     enum Mode { Open, Auction, Owned, Forbidden, Reveal, NotYetAvailable }
 
     uint32 constant totalAuctionLength = 5 days;
@@ -134,7 +134,7 @@ contract Registrar {
     //   Owned -> Open (releaseDeed)
     function state(bytes32 _hash) constant returns (Mode) {
         var entry = _entries[_hash];
-        
+
         if(!isAllowed(_hash, now)) {
             return Mode.NotYetAvailable;
         } else if(now < entry.registrationDate) {
@@ -243,24 +243,24 @@ contract Registrar {
         }
         return len;
     }
-    
-    /** 
+
+    /**
      * @dev Determines if a name is available for registration yet
-     * 
-     * Each name will be assigned a random date in which its auction 
+     *
+     * Each name will be assigned a random date in which its auction
      * can be started, from 0 to 13 weeks
-     * 
+     *
      * @param _hash The hash to start an auction on
      * @param _timestamp The timestamp to query about
      */
-     
+
     function isAllowed(bytes32 _hash, uint _timestamp) constant returns (bool allowed){
         return _timestamp > getAllowedTime(_hash);
     }
 
-    /** 
+    /**
      * @dev Returns available date for hash
-     * 
+     *
      * @param _hash The hash to start an auction on
      */
     function getAllowedTime(bytes32 _hash) constant returns (uint timestamp) {
@@ -274,7 +274,7 @@ contract Registrar {
      */
     function trySetSubnodeOwner(bytes32 _hash, address _newOwner) internal {
         if(ens.owner(rootNode) == address(this))
-            ens.setSubnodeOwner(rootNode, _hash, _newOwner);        
+            ens.setSubnodeOwner(rootNode, _hash, _newOwner);
     }
 
     /**
@@ -470,7 +470,7 @@ contract Registrar {
 
         _tryEraseSingleNode(_hash);
         deedContract.closeDeed(1000);
-        HashReleased(_hash, h.value);        
+        HashReleased(_hash, h.value);
     }
 
     /**
@@ -506,7 +506,7 @@ contract Registrar {
      *      name that is not currently owned in the registrar. If passing, eg, 'foo.bar.eth',
      *      the owner and resolver fields on 'foo.bar.eth' and 'bar.eth' will all be cleared.
      * @param labels A series of label hashes identifying the name to zero out, rooted at the
-     *        registrar's root. Must contain at least one element. For instance, to zero 
+     *        registrar's root. Must contain at least one element. For instance, to zero
      *        'foo.bar.eth' on a registrar that owns '.eth', pass an array containing
      *        [sha3('foo'), sha3('bar')].
      */
@@ -530,7 +530,7 @@ contract Registrar {
         // Take ownership of the node
         ens.setSubnodeOwner(node, labels[idx], address(this));
         node = sha3(node, labels[idx]);
-        
+
         // Recurse if there's more labels
         if(idx > 0)
             _eraseNodeHierarchy(idx - 1, labels, node);
