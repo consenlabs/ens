@@ -105,18 +105,50 @@ Check the truffle [documentation](http://truffleframework.com/docs/) for more in
 
 	truffle migrate --reset  --network kovan
 
-## test in console
+## test in chrome with metamask
+
+不要使用部署合约的账号来进行一下操作
+建议使用chrome + metamask来做测试，因为可以方便的更好钱包地址
+
+### 定义registrar 合约实例
 ```
-truffle console --reset  --network kovan
+var regsCont = web3.eth.contract(<registrar contract abi>)
 
-r = Registrar.at(<Registrar Contract Address>)
+var r = regsCont.at(<registrar address on kovan>)
+```
 
-r.state(web3.sha3('caizhen'))
+### 检查域名状态
+```
+name = 'caizhen'
 
-r.startAuction(web3.sha3('caizhen'))
+r.entries(web3.sha3(name), (err, res)=>{console.log(err, res.toString())})
+```
+### 开标
+```
+r.startAuction(web3.sha3(name), {from: web3.eth.accounts[0], gas: 100000}, (err, res)=>{console.log(err, res.toString())})
+```
 
-r.shaBid(web3.sha3('caizhen'), web3.eth.accounts[0], web3.toWei(0.3), web3.sha3('secret'), function(err, result) {console.log(err, result)})
+### 投标
+```
+r.shaBid(web3.sha3(name), web3.eth.accounts[0], web3.toWei(0.05, 'ether'), web3.sha3('secret'), (err, res)=>{console.log(err, res.toString())});
+> null <bid>
 
-r.newBid(<bid above>, {from: web3.eth.accounts[0], value: web3.toWei(2), gas: 1000000}, function(err, txid) {console.log(err, txid)})
+r.newBid(<bid>, {from: web3.eth.accounts[0], value: web3.toWei(0.07, 'ether'), gas: 500000}, (err, res)=>{console.log(err, res)});
+```
 
+### 揭标
+```
+r.unsealBid(web3.sha3(name), web3.toWei(0.05, 'ether'), web3.sha3('secret'), {from: web3.eth.accounts[0], gas: 500000}, (err, res)=>{console.log(err, res.toString())})
+```
+
+### 结束竞标
+```
+r.finalizeAuction(web3.sha3(name), {from: web3.eth.accounts[0], gas: 500000}, (err, res)=>{console.log(err, res.toString())});
+```
+
+### 检查域名所有权
+```
+var ens = web3.eth.contract(<ens abi>).at(<ens address>)
+
+ens.owner(namehash(name + '.eth'), (err, res)=>{console.log(err, res.toString())})
 ```

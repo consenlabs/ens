@@ -107,7 +107,7 @@ contract Registrar {
 
     uint32 constant totalAuctionLength = 4 minutes;
     uint32 constant revealPeriod = 2 minutes;
-    uint32 constant launchLength = 2 minutes;
+    uint32 constant launchLength = 1 minutes;
     uint constant minPrice = 0.01 ether;
     uint public registryStarted;
 
