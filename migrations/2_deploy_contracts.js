@@ -6,6 +6,7 @@ const FIFSRegistrar = artifacts.require('./FIFSRegistrar.sol');
 // not existed, it's valid to put it here.
 // TODO: align the contract name with the source code file name.
 const Registrar = artifacts.require('./Registrar.sol');
+const PublicResolver = artifacts.require('./PublicResolver.sol')
 const web3 = new (require('web3'))();
 const namehash = require('../node_modules/eth-ens-namehash/index.js');
 
@@ -61,6 +62,9 @@ function deployAuctionRegistrar(deployer, tld) {
     .then(function() {
       // Transfer the owner of the `rootNode` to the HashRegistrar
       ENS.at(ENS.address).setSubnodeOwner('0x0', rootNode.sha3, Registrar.address);
+    })
+    .then(function() {
+      deployer.deploy(PublicResolver, ENS.address);
     });
 }
 
