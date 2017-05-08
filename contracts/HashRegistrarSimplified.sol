@@ -420,7 +420,7 @@ contract Registrar {
         Deed bid = sealedBids[bidder][seal];
         // If the bid hasn't been revealed after any possible auction date, then close it
         if (address(bid) == 0
-            || now < bid.creationDate() + totalAuctionLength + 2 weeks) throw;
+            || now < bid.creationDate() + totalAuctionLength + 10 seconds) throw;
 
         // Send the canceller 0.5% of the bid, and burn the rest.
         bid.setOwner(msg.sender);
